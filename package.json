@@ -1,0 +1,7 @@
+{
+  "name": "@lufycz/vesting-protocols",
+  "private": true,
+  "workspaces": [
+    "dracula/*"
+  ]
+}

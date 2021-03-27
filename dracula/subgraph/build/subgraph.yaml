@@ -1,0 +1,56 @@
+specVersion: 0.0.2
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Masterchef
+    network: mainnet
+    source:
+      address: "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd"
+      abi: Masterchef
+      startBlock: 10736241
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - MasterchefPool
+        - Masterchef
+        - Change
+      abis:
+        - name: Masterchef
+          file: Masterchef/abis/Masterchef.json
+      callHandlers:
+        - function: add(uint256,address,bool)
+          handler: masterchefAddHandler
+        - function: set(uint256,uint256,bool)
+          handler: masterchefSetHandler
+      file: Masterchef/Masterchef.wasm
+  - kind: ethereum/contract
+    name: Vampire
+    network: mainnet
+    source:
+      address: "0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099"
+      abi: MasterVampire
+      startBlock: 11001618
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - VampirePool
+        - MasterVampire
+      abis:
+        - name: MasterVampire
+          file: Vampire/abis/MasterVampire.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed uint256,uint256)
+          handler: vampireDepositHandler
+        - event: Withdraw(indexed address,indexed uint256,uint256)
+          handler: vampireWithdrawHandler
+      callHandlers:
+        - function: add(address,uint256,uint256,uint256,uint256)
+          handler: vampireAddHandler
+        - function: updateVictimInfo(uint256,address,uint256)
+          handler: vampireUpdateVictimInfoHandler
+      file: Masterchef/Masterchef.wasm
