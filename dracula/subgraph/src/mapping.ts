@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, log } from "@graphprotocol/graph-ts"
 import {
   AddCall as MasterchefAddCall,
   SetCall as MasterchefSetCall,
@@ -129,11 +129,14 @@ export function vampireUpdateVictimInfoHandler(call: VampireUpdateVictimInfoCall
 
 export function vampireDepositHandler(event: VampireDeposit): void {
     const userId = event.params.user.toHex() + "-" +  event.params.pid.toString();
-    let vampireUser = getVampireUser(userId)
+    let vampireUser = getVampireUser(userId);
     vampireUser.balance = vampireUser.balance.plus(event.params.amount);
     vampireUser.save();
 
     let vampirePool = VampirePool.load(event.params.pid.toHex());
+    
+    log.debug("deposit", [event.params.amount.toString(), vampireUser.balance.toString(), vampirePool.balance.toString()])
+
     vampirePool.balance = vampirePool.balance.plus(event.params.amount);
     vampirePool.save();
 }
