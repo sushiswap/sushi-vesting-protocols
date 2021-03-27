@@ -20,6 +20,11 @@ dataSources:
       abis:
         - name: Masterchef
           file: Masterchef/abis/Masterchef.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed uint256,uint256)
+          handler: masterchefDepositHandler
+        - event: Withdraw(indexed address,indexed uint256,uint256)
+          handler: masterchefWithdrawHandler
       callHandlers:
         - function: add(uint256,address,bool)
           handler: masterchefAddHandler

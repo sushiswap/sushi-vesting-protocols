@@ -7,6 +7,7 @@ type VampirePool @entity {
   id: ID!
   victim: Bytes!
   victimPoolId: BigInt!
+  balance: BigInt!
   users: [VampireUser!]! @derivedFrom(field: "vampirePool")
 }
 
@@ -14,23 +15,6 @@ type VampireUser @entity {
   id: ID!
   vampirePool: VampirePool!
   balance: BigInt!
-  actions: [Action!]! @derivedFrom(field: "user")
-  actionsLength: BigInt!
-}
-
-type Action @entity {
-  id: ID!
-  user: VampireUser!
-  type: ActionType!
-  balanceBefore: BigInt!
-  balanceAfter: BigInt!
-  amount: BigInt!
-  block: BigInt!
-}
-
-enum ActionType {
-  deposit
-  withdraw
 }
 
 
@@ -43,17 +27,8 @@ type Masterchef @entity {
 
 type MasterchefPool @entity {
   id: ID!
+  masterchef: Masterchef!
   allocPoint: BigInt!
-  weight: BigDecimal!
+  balance: BigInt!
   lastBlockUpdated: BigInt!
-  changes: [Change!]! @derivedFrom(field: "masterchefPool")
-  changesLength: BigInt!
-}
-
-type Change @entity {
-  id: ID!
-  masterchefPool: MasterchefPool!
-  oldWeight: BigDecimal!
-  newWeight: BigDecimal!
-  block: BigInt!
 }

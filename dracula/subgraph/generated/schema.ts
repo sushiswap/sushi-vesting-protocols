@@ -100,6 +100,15 @@ export class VampirePool extends Entity {
     this.set("victimPoolId", Value.fromBigInt(value));
   }
 
+  get balance(): BigInt {
+    let value = this.get("balance");
+    return value.toBigInt();
+  }
+
+  set balance(value: BigInt) {
+    this.set("balance", Value.fromBigInt(value));
+  }
+
   get users(): Array<string> {
     let value = this.get("users");
     return value.toStringArray();
@@ -156,109 +165,6 @@ export class VampireUser extends Entity {
 
   set balance(value: BigInt) {
     this.set("balance", Value.fromBigInt(value));
-  }
-
-  get actions(): Array<string> {
-    let value = this.get("actions");
-    return value.toStringArray();
-  }
-
-  set actions(value: Array<string>) {
-    this.set("actions", Value.fromStringArray(value));
-  }
-
-  get actionsLength(): BigInt {
-    let value = this.get("actionsLength");
-    return value.toBigInt();
-  }
-
-  set actionsLength(value: BigInt) {
-    this.set("actionsLength", Value.fromBigInt(value));
-  }
-}
-
-export class Action extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id !== null, "Cannot save Action entity without an ID");
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save Action entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("Action", id.toString(), this);
-  }
-
-  static load(id: string): Action | null {
-    return store.get("Action", id) as Action | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get user(): string {
-    let value = this.get("user");
-    return value.toString();
-  }
-
-  set user(value: string) {
-    this.set("user", Value.fromString(value));
-  }
-
-  get type(): string {
-    let value = this.get("type");
-    return value.toString();
-  }
-
-  set type(value: string) {
-    this.set("type", Value.fromString(value));
-  }
-
-  get balanceBefore(): BigInt {
-    let value = this.get("balanceBefore");
-    return value.toBigInt();
-  }
-
-  set balanceBefore(value: BigInt) {
-    this.set("balanceBefore", Value.fromBigInt(value));
-  }
-
-  get balanceAfter(): BigInt {
-    let value = this.get("balanceAfter");
-    return value.toBigInt();
-  }
-
-  set balanceAfter(value: BigInt) {
-    this.set("balanceAfter", Value.fromBigInt(value));
-  }
-
-  get amount(): BigInt {
-    let value = this.get("amount");
-    return value.toBigInt();
-  }
-
-  set amount(value: BigInt) {
-    this.set("amount", Value.fromBigInt(value));
-  }
-
-  get block(): BigInt {
-    let value = this.get("block");
-    return value.toBigInt();
-  }
-
-  set block(value: BigInt) {
-    this.set("block", Value.fromBigInt(value));
   }
 }
 
@@ -341,6 +247,15 @@ export class MasterchefPool extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get masterchef(): string {
+    let value = this.get("masterchef");
+    return value.toString();
+  }
+
+  set masterchef(value: string) {
+    this.set("masterchef", Value.fromString(value));
+  }
+
   get allocPoint(): BigInt {
     let value = this.get("allocPoint");
     return value.toBigInt();
@@ -350,13 +265,13 @@ export class MasterchefPool extends Entity {
     this.set("allocPoint", Value.fromBigInt(value));
   }
 
-  get weight(): BigDecimal {
-    let value = this.get("weight");
-    return value.toBigDecimal();
+  get balance(): BigInt {
+    let value = this.get("balance");
+    return value.toBigInt();
   }
 
-  set weight(value: BigDecimal) {
-    this.set("weight", Value.fromBigDecimal(value));
+  set balance(value: BigInt) {
+    this.set("balance", Value.fromBigInt(value));
   }
 
   get lastBlockUpdated(): BigInt {
@@ -366,90 +281,5 @@ export class MasterchefPool extends Entity {
 
   set lastBlockUpdated(value: BigInt) {
     this.set("lastBlockUpdated", Value.fromBigInt(value));
-  }
-
-  get changes(): Array<string> {
-    let value = this.get("changes");
-    return value.toStringArray();
-  }
-
-  set changes(value: Array<string>) {
-    this.set("changes", Value.fromStringArray(value));
-  }
-
-  get changesLength(): BigInt {
-    let value = this.get("changesLength");
-    return value.toBigInt();
-  }
-
-  set changesLength(value: BigInt) {
-    this.set("changesLength", Value.fromBigInt(value));
-  }
-}
-
-export class Change extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id !== null, "Cannot save Change entity without an ID");
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save Change entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("Change", id.toString(), this);
-  }
-
-  static load(id: string): Change | null {
-    return store.get("Change", id) as Change | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get masterchefPool(): string {
-    let value = this.get("masterchefPool");
-    return value.toString();
-  }
-
-  set masterchefPool(value: string) {
-    this.set("masterchefPool", Value.fromString(value));
-  }
-
-  get oldWeight(): BigDecimal {
-    let value = this.get("oldWeight");
-    return value.toBigDecimal();
-  }
-
-  set oldWeight(value: BigDecimal) {
-    this.set("oldWeight", Value.fromBigDecimal(value));
-  }
-
-  get newWeight(): BigDecimal {
-    let value = this.get("newWeight");
-    return value.toBigDecimal();
-  }
-
-  set newWeight(value: BigDecimal) {
-    this.set("newWeight", Value.fromBigDecimal(value));
-  }
-
-  get block(): BigInt {
-    let value = this.get("block");
-    return value.toBigInt();
-  }
-
-  set block(value: BigInt) {
-    this.set("block", Value.fromBigInt(value));
   }
 }
