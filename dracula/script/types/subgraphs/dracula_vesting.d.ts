@@ -8,6 +8,7 @@ export type VampirePool = {
     id?: string,
     victim?: string,
     victimPoolId?: string,
+    balance?: string,
     users?: VampireUser[]
 }
 
@@ -15,24 +16,8 @@ export type VampirePool = {
 export type VampireUser = {
     id?: string,
     vampirePool?: VampirePool,
-    balance?: string,
-    actions?: Action[],
-    actionsLength?: string
+    balance?: string
 }
-
-
-export type Action = {
-    id?: string,
-    user?: VampireUser,
-    type?: ActionType,
-    balanceBefore?: string,
-    balanceAfter?: string,
-    amount?: string,
-    block?: string
-}
-
-
-export type ActionType = 'deposit' | 'withdraw';
 
 
 export type Masterchef = {
@@ -44,18 +29,8 @@ export type Masterchef = {
 
 export type MasterchefPool = {
     id?: string,
+    masterchef?: Masterchef,
     allocPoint?: string,
-    weight?: string,
-    lastBlockUpdated?: string,
-    changes?: Change[],
-    changesLength?: string
-}
-
-
-export type Change = {
-    id?: string,
-    masterchefPool?: MasterchefPool,
-    oldWeight?: string,
-    newWeight?: string,
-    block?: string
+    balance?: string,
+    lastBlockUpdated?: string
 }

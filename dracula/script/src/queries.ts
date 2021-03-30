@@ -1,98 +1,172 @@
-import * as dotenv from "dotenv";
 import pageResults from 'graph-results-pager';
-import Web3 from 'web3';
 
-import { DEPOSIT_TOPIC, WITHDRAW_TOPIC,DRACULA_VESTING_SUBGRAPH, MASTER_VAMPIRE_ADDRESS, SUSHI_ADAPTER_ADDRESSES } from './constants';
-import { Change, VampirePool, VampireUser } from "../types/subgraphs/dracula_vesting";
-import { Awaited } from "../types";
-
-dotenv.config({ path: './.env' });
-
-const web3 = new Web3(process.env.WEB3_PROVIDER as string);
+import { DRACULA_VESTING_SUBGRAPH, SUSHI_ADAPTER_ADDRESSES, DELAY } from './constants';
+import { MasterchefPool, VampirePool, VampireUser } from "../types/subgraphs/dracula_vesting";
 
 
 test()
 async function test() {
-    console.log((await usersQuery())[0])
+    const results = await query()
+    //console.log(results[100])
 }
 
-async function changesQuery() {
-    const results: Change[] = await pageResults({
-        api: DRACULA_VESTING_SUBGRAPH,
-        query: {
-            entity: 'changes',
-            properties: [
-                'id',
-                'oldWeight',
-                'newWeight',
-                'block'
-            ]
-        },
-    })
-
-    return results.map(change => ({
-        poolId: change.id?.split("-")[0],
-        changeNumber: change.id?.split("-")[1],
-        oldWeight: Number(change.oldWeight),
-        newWeight: Number(change.newWeight),
-        block: BigInt(change.block)
-    }))
+// TheGraph doesn't like it for some reason when I make thousands of requests a second...
+async function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
-async function poolsQuery() {
-    const results: VampirePool[] = await pageResults({
-        api: DRACULA_VESTING_SUBGRAPH,
-        query: {
-            entity: 'vampirePools',
-            properties: [
-                'id',
-                'victim',
-                'victimPoolId'
-            ]
-        }
-    })
+async function masterchefPoolsQuery(blocks: number[]) {
+    const queries = [];
 
-        return results
-            .filter(pool => SUSHI_ADAPTER_ADDRESSES.find(adapter => pool.victim === adapter.toLowerCase()))
+    for(const block of blocks) {
+        queries.push(
+            pageResults({
+                api: DRACULA_VESTING_SUBGRAPH,
+                query: {
+                    entity: "masterchefPools",
+                    selection: {
+                        block: {number: block}
+                    },
+                    properties: [
+                        'id',
+                        'allocPoint',
+                        'masterchef { totalAllocPoint }',
+                        'balance'
+                    ]
+                }
+            })
+        );
+        await delay(DELAY);
+    }
+
+    const masterchefPools: MasterchefPool[][] = await Promise.all(queries);
+
+    // Clean up the output of the query
+    return masterchefPools.map(block => 
+        block.map(pool => ({
+            id: Number(pool.id),
+            weight: Number(pool.allocPoint) / Number(pool.masterchef?.totalAllocPoint), // Calculates the weight of the whole pool
+            balance: Number(pool.balance)
+        })),
+    );
+}
+
+
+
+async function vampirePoolsQuery(blocks: number[]) {
+    const queries = [];
+
+    for(const block of blocks) {
+        queries.push(
+            pageResults({
+                api: DRACULA_VESTING_SUBGRAPH,
+                query: {
+                    entity: "vampirePools",
+                    selection: {
+                        block: {number: block}
+                    },
+                    properties: [
+                        'id',
+                        'victim',
+                        'victimPoolId',
+                        'balance'
+                    ]
+                }
+            })
+        );
+        await delay(DELAY);
+    }
+
+    const vampirePools: VampirePool[][] = await Promise.all(queries);
+
+    return vampirePools.map(block => 
+        block
+            .filter(pool => (
+                // Filter out non-sushi "victims"
+                SUSHI_ADAPTER_ADDRESSES.find(adapter => pool.victim === adapter.toLowerCase())
+            ))
             .map(pool => ({
                 vampirePoolId: Number(pool.id),
-                masterchefPoolId: Number(pool.victimPoolId)
+                masterchefPoolId: Number(pool.victimPoolId),
+                balance: Number(pool.balance),
             }))
-            .sort((a, b) => a.vampirePoolId - b.vampirePoolId);
+            .sort((a, b) => a.vampirePoolId - b.vampirePoolId)
+    );
 }
 
-async function usersQuery() {
-    const results: VampireUser[] = await pageResults({
-        api: DRACULA_VESTING_SUBGRAPH,
-        query: {
-            entity: 'vampireUsers',
-            properties: [
-                'id',
-                'vampirePool { victimPoolId }',
-                'actions(first: 1000) { id, type, balanceBefore, balanceAfter, block }'
-            ]
-        }
-    });
 
-    const pools = await poolsQuery();
-    console.log(pools)
-    return results
-        .filter(user => pools.find(pool => user.id?.split("-")[1] === String(pool.vampirePoolId)) ? true : false)
-        .map(user => ({
-            address: user.id?.split("-")[0],
-            vampirePoolId: Number(user.id?.split("-")[1]),
-            masterchefPoolId: Number(user.vampirePool?.victimPoolId),
-            actions: user.actions?.map(action => ({
-                type: action.type,
-                balanceBefore: BigInt(action.balanceBefore),
-                balanceAfter: BigInt(action.balanceAfter),
-                block: BigInt(action.block)
-            })).sort((a,b) => Number(a.block - b.block))
-        }))
+
+async function usersQuery(blocks: number[]) {
+    const queries = [];
+
+    for(const block of blocks) {
+        queries.push(
+            pageResults({
+                api: DRACULA_VESTING_SUBGRAPH,
+                query: {
+                    entity: "vampireUsers",
+                    selection: {
+                        where: {
+                            balance_gt: 0
+                        },
+                        block: {number: block}
+                    },
+                    properties: [
+                        'id',
+                        'balance'
+                    ]
+                }
+            })
+        );
+        await delay(DELAY);
+    }
+
+    const users: VampireUser[][] = await Promise.all(queries);
+
+    return users.map(block => 
+        block
+            .map(user => ({
+                user: user.id?.split("-")[0]!,
+                poolId: Number(user.id?.split("-")[1]),
+                balance: Number(user.balance)
+            }))
+    );
 }
 
-export default {
-    changesQuery,
-    poolsQuery,
-    usersQuery
+
+
+export default async function query({startBlock = 11001618, endBlock = 12123943, step = 10000} = {}) {  
+    const blocks: number[] = [];
+
+    for(let i = startBlock; i <= endBlock; i += step) {
+        blocks.push(i);
+    }
+    
+    const masterchefPools = await masterchefPoolsQuery(blocks);
+    const vampirePools = await vampirePoolsQuery(blocks);
+    const users = await usersQuery(blocks);
+
+    return {
+        poolsData: vampirePools.map((block, i) => {
+            // Can assume that the corresponding masterchef block of pools will be on the same index
+            const masterchefBlock = masterchefPools[i];
+
+            return (
+                block.map(vampirePool => {
+                    const masterchefPool = masterchefBlock.find(masterchefPool => masterchefPool.id === vampirePool.masterchefPoolId)!;
+                
+                    // Calculates the weight of the vampire pool compared to the total weight of Masterchef
+                    const weight = (vampirePool.balance / masterchefPool?.balance) * masterchefPool?.weight;
+
+                    return ({
+                        poolId: vampirePool.vampirePoolId, // Use vampirePoolId, since user ids will have this id as well 
+                        weight: isFinite(weight) ? weight : 0 // Can be NaN or Infinite if some value is zero
+                    })
+                })
+            )
+            .filter(pool => pool.weight !== 0)
+        }),
+
+        usersData: users
+    };
 }

@@ -133,10 +133,7 @@ export function vampireDepositHandler(event: VampireDeposit): void {
     vampireUser.balance = vampireUser.balance.plus(event.params.amount);
     vampireUser.save();
 
-    let vampirePool = VampirePool.load(event.params.pid.toHex());
-    
-    log.debug("deposit", [event.params.amount.toString(), vampireUser.balance.toString(), vampirePool.balance.toString()])
-
+    let vampirePool = VampirePool.load(event.params.pid.toString());
     vampirePool.balance = vampirePool.balance.plus(event.params.amount);
     vampirePool.save();
 }
@@ -147,7 +144,7 @@ export function vampireWithdrawHandler(event: VampireWithdraw): void {
     vampireUser.balance = vampireUser.balance.minus(event.params.amount);
     vampireUser.save();
 
-    let vampirePool = VampirePool.load(event.params.pid.toHex());
+    let vampirePool = VampirePool.load(event.params.pid.toString());
     vampirePool.balance = vampirePool.balance.minus(event.params.amount);
     vampirePool.save();
 }
