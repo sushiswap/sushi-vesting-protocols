@@ -1,4 +1,7 @@
 {
+  "name": "sushi-vesting-dracula",
+  "author": "LufyCZ",
+  "license": "MIT",
   "dependencies": {
     "@types/node": "^14.14.36",
     "commander": "^7.2.0",
@@ -7,5 +10,9 @@
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3",
     "web3": "^1.3.4"
+  },
+
+  "scripts": {
+    "standalone": "ts-node src/standalone"
   }
 }

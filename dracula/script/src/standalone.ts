@@ -1,15 +1,46 @@
 import { Command } from "commander";
 import fs from "fs";
+import { VESTING_START } from "./constants";
 
 import getDraculaDistribution from './index';
 
 const program = new Command();
 
-const options = {
-    startBlock: 11001618,
-    endBlock: 12135554,
-    step: 2500,
-    totalVested: 1000
+type Options = {
+    startBlock: number,
+    endBlock: number,
+    step: number | undefined,
+    totalVested: number
 }
 
-getDraculaDistribution(options)
+program
+    .option('-s, --startBlock <number>')
+    .requiredOption('-e, --endBlock <number>')
+    .option('--step <number>')
+    .requiredOption('-t, --totalVested <bigint>');
+
+program.parse(process.argv);
+
+const options: Options = {
+    startBlock: Number(program.opts().startBlock ?? VESTING_START),
+    endBlock: Number(program.opts().endBlock),
+    step: Number(program.opts().step),
+    totalVested: Number(program.opts().totalVested)
+}
+
+main();
+
+async function main() {
+    const distribution = await getDraculaDistribution(options);
+
+    if(!fs.existsSync('./outputs')) {
+        fs.mkdirSync('./outputs')
+    }
+
+    fs.writeFileSync(
+        `./outputs/amounts-${options.startBlock}-${options.endBlock}.json`,
+        JSON.stringify(
+            distribution, null, 1
+        )
+    );
+}

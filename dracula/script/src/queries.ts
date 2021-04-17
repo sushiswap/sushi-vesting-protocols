@@ -2,39 +2,53 @@ import pageResults from 'graph-results-pager';
 
 import { DRACULA_VESTING_SUBGRAPH, SUSHI_ADAPTER_ADDRESSES, DELAY } from './constants';
 import { MasterchefPool, VampirePool, VampireUser } from "../types/subgraphs/dracula_vesting";
+import { Awaited } from '../types';
 
-
-test()
-async function test() {
-    const results = await query()
-    //console.log(results[100])
-}
 
 // TheGraph doesn't like it for some reason when I make thousands of requests a second...
 async function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
+
+// The queries fail quite often unfortunately
+async function makeQuery(args: any) {
+    let result: Awaited<ReturnType<typeof pageResults>> | undefined = undefined;
+
+    while(!result) {
+        try {
+            result = await pageResults(args)
+        }
+        catch(err) {}
+    }
+
+    return result;
+}
+
+
+// Fetches the pool data of our Masterchef
 async function masterchefPoolsQuery(blocks: number[]) {
     const queries = [];
 
     for(const block of blocks) {
         queries.push(
-            pageResults({
-                api: DRACULA_VESTING_SUBGRAPH,
-                query: {
-                    entity: "masterchefPools",
-                    selection: {
-                        block: {number: block}
-                    },
-                    properties: [
-                        'id',
-                        'allocPoint',
-                        'masterchef { totalAllocPoint }',
-                        'balance'
-                    ]
+            makeQuery(
+                {
+                    api: DRACULA_VESTING_SUBGRAPH,
+                    query: {
+                        entity: "masterchefPools",
+                        selection: {
+                            block: {number: block}
+                        },
+                        properties: [
+                            'id',
+                            'allocPoint',
+                            'masterchef { totalAllocPoint }',
+                            'balance'
+                        ]
+                    }
                 }
-            })
+            )
         );
         await delay(DELAY);
     }
@@ -52,13 +66,13 @@ async function masterchefPoolsQuery(blocks: number[]) {
 }
 
 
-
+// Fetches the pool data of Dracula's MasterVampire
 async function vampirePoolsQuery(blocks: number[]) {
     const queries = [];
 
     for(const block of blocks) {
         queries.push(
-            pageResults({
+            makeQuery({
                 api: DRACULA_VESTING_SUBGRAPH,
                 query: {
                     entity: "vampirePools",
@@ -95,13 +109,13 @@ async function vampirePoolsQuery(blocks: number[]) {
 }
 
 
-
+// Fetches user data
 async function usersQuery(blocks: number[]) {
     const queries = [];
 
     for(const block of blocks) {
         queries.push(
-            pageResults({
+            makeQuery({
                 api: DRACULA_VESTING_SUBGRAPH,
                 query: {
                     entity: "vampireUsers",
@@ -134,8 +148,8 @@ async function usersQuery(blocks: number[]) {
 }
 
 
-
-export default async function query({startBlock = 11001618, endBlock = 12123943, step = 10000} = {}) {  
+// Wrapped and clean-upper for all the queries
+export default async function query({startBlock, endBlock, step}: {startBlock: number, endBlock: number, step: number}) {  
     const blocks: number[] = [];
 
     for(let i = startBlock; i <= endBlock; i += step) {

@@ -1,3 +1,4 @@
+import { DEFAULT_STEP, VESTING_START } from './constants';
 import query from './queries';
 
 type Options = {
@@ -8,6 +9,9 @@ type Options = {
 }
 
 export default async function getDraculaDistribution(options: Options) {
+    options.startBlock = options.startBlock ?? VESTING_START;
+    options.step = options.step ?? DEFAULT_STEP;
+
     const { poolsData, usersData } = await query({startBlock: options.startBlock, endBlock: options.endBlock, step: options.step});
 
     const balances: {[key: string]: number} = {};
@@ -31,7 +35,12 @@ export default async function getDraculaDistribution(options: Options) {
 
     const fraction = options.totalVested / totalPoints
 
-    Object.keys(balances).forEach(key => balances[key] = balances[key] * fraction)
+    const final: {[key: string]: string} = {};
 
-    Object.keys(balances).forEach((key, i) => {if(i < 10) {console.log(key + " - " + balances[key])}})
+    Object.keys(balances).forEach(key => { 
+        final[key] = String(Math.floor(balances[key] * fraction));
+        if(final[key] === "0") delete final[key];
+    })
+
+    return final;
 }
