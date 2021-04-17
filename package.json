@@ -2,6 +2,8 @@
   "name": "@lufycz/vesting-protocols",
   "private": true,
   "workspaces": [
-    "dracula/*"
+    "protocols/dracula/*",
+    "protocols/yam/*",
+    "aggregator"
   ]
 }

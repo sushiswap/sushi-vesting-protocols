@@ -1,0 +1,20 @@
+type YamUser @entity {
+  id: ID!
+  balance: BigInt!
+}
+
+
+
+type Masterchef @entity {
+  id: ID!
+  totalAllocPoint: BigInt!
+  poolLength: BigInt!
+}
+
+type MasterchefPool @entity {
+  id: ID!
+  masterchef: Masterchef!
+  allocPoint: BigInt!
+  balance: BigInt!
+  lastBlockUpdated: BigInt!
+}

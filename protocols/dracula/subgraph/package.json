@@ -1,6 +1,8 @@
 {
-  "name": "VestingDracula",
-  "license": "UNLICENSED",
+  "name": "sushi-vesting-dracula-subgraph",
+  "author": "LufyCZ",
+  "license": "MIT",
+  "version": "1.0.0",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",

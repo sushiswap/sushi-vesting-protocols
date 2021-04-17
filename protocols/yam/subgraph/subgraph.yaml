@@ -1,0 +1,55 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Masterchef
+    network: mainnet
+    source:
+      address: "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd"
+      abi: Masterchef
+      startBlock: 10736241 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - MasterchefPool
+        - Masterchef
+        - Change
+      abis:
+        - name: Masterchef
+          file: ./abis/Masterchef.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed uint256,uint256)
+          handler: masterchefDepositHandler
+        - event: Withdraw(indexed address,indexed uint256,uint256)
+          handler: masterchefWithdrawHandler
+      callHandlers:
+        - function: add(uint256,address,bool)
+          handler: masterchefAddHandler
+        - function: set(uint256,uint256,bool)
+          handler: masterchefSetHandler
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: Incentivizer
+    network: mainnet
+    source:
+      address: "0xd67c05523d8ec1c60760fd017ef006b9f6e496d0"
+      abi: YamIncentivizer
+      startBlock: 11224072
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - YamUser
+      abis:
+        - name: YamIncentivizer
+          file: ./abis/YamIncentivizer.json
+      eventHandlers:
+        - event: Staked(indexed address,uint256)
+          handler: yamDepositHandler
+        - event: Withdrawn(indexed address,uint256)
+          handler: yamWithdrawHandler
+      file: ./src/mapping.ts
