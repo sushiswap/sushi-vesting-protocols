@@ -26,14 +26,14 @@ export default async function getDraculaDistribution(options: Options) {
                 const points = user.balance * pool.weight;
 
                 balances[user.user] = balances[user.user] ? balances[user.user] + points : points;
-            })
-        })
+            });
+        });
     });
 
     let totalPoints = 0;
-    Object.keys(balances).forEach(key => totalPoints += balances[key])
+    Object.keys(balances).forEach(key => totalPoints += balances[key]);
 
-    const fraction = options.totalVested / totalPoints
+    const fraction = options.totalVested / totalPoints;
 
     const final: {[key: string]: string} = {};
 

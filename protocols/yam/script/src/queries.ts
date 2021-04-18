@@ -1,7 +1,7 @@
 import pageResults from 'graph-results-pager';
 
-import { DRACULA_VESTING_SUBGRAPH, SUSHI_ADAPTER_ADDRESSES, DELAY } from './constants';
-import { MasterchefPool, VampirePool, VampireUser } from "../types/subgraphs/dracula_vesting";
+import { YAM_VESTING_SUBGRAPH, DELAY, YAM_POOL_ID } from './constants';
+import { MasterchefPool, YamUser } from "../types/subgraphs/yam_vesting";
 import { Awaited } from '../types';
 
 
@@ -26,7 +26,7 @@ async function makeQuery(args: any) {
 }
 
 
-// Fetches the pool data of our Masterchef
+// Fetches the pool data of our Masterchef, could be more efficient, but it's fast enough so w/e
 async function masterchefPoolsQuery(blocks: number[]) {
     const queries = [];
 
@@ -34,7 +34,7 @@ async function masterchefPoolsQuery(blocks: number[]) {
         queries.push(
             makeQuery(
                 {
-                    api: DRACULA_VESTING_SUBGRAPH,
+                    api: YAM_VESTING_SUBGRAPH,
                     query: {
                         entity: "masterchefPools",
                         selection: {
@@ -66,49 +66,6 @@ async function masterchefPoolsQuery(blocks: number[]) {
 }
 
 
-// Fetches the pool data of Dracula's MasterVampire
-async function vampirePoolsQuery(blocks: number[]) {
-    const queries = [];
-
-    for(const block of blocks) {
-        queries.push(
-            makeQuery({
-                api: DRACULA_VESTING_SUBGRAPH,
-                query: {
-                    entity: "vampirePools",
-                    selection: {
-                        block: {number: block}
-                    },
-                    properties: [
-                        'id',
-                        'victim',
-                        'victimPoolId',
-                        'balance'
-                    ]
-                }
-            })
-        );
-        await delay(DELAY);
-    }
-
-    const vampirePools: VampirePool[][] = await Promise.all(queries);
-
-    return vampirePools.map(block => 
-        block
-            .filter(pool => (
-                // Filter out non-sushi "victims"
-                SUSHI_ADAPTER_ADDRESSES.find(adapter => pool.victim === adapter.toLowerCase())
-            ))
-            .map(pool => ({
-                vampirePoolId: Number(pool.id),
-                masterchefPoolId: Number(pool.victimPoolId),
-                balance: Number(pool.balance),
-            }))
-            .sort((a, b) => a.vampirePoolId - b.vampirePoolId)
-    );
-}
-
-
 // Fetches user data
 async function usersQuery(blocks: number[]) {
     const queries = [];
@@ -116,9 +73,9 @@ async function usersQuery(blocks: number[]) {
     for(const block of blocks) {
         queries.push(
             makeQuery({
-                api: DRACULA_VESTING_SUBGRAPH,
+                api: YAM_VESTING_SUBGRAPH,
                 query: {
-                    entity: "vampireUsers",
+                    entity: "yamUsers",
                     selection: {
                         where: {
                             balance_gt: 0
@@ -135,20 +92,19 @@ async function usersQuery(blocks: number[]) {
         await delay(DELAY);
     }
 
-    const users: VampireUser[][] = await Promise.all(queries);
+    const users: YamUser[][] = await Promise.all(queries);
 
     return users.map(block => 
         block
             .map(user => ({
                 user: user.id?.split("-")[0]!,
-                poolId: Number(user.id?.split("-")[1]),
                 balance: Number(user.balance)
             }))
     );
 }
 
 
-// Wrapped and clean-upper for all the queries
+// Wrapper and clean-upper for all the queries
 export default async function query({startBlock, endBlock, step}: {startBlock: number, endBlock: number, step: number}) {  
     const blocks: number[] = [];
 
@@ -157,29 +113,21 @@ export default async function query({startBlock, endBlock, step}: {startBlock: n
     }
     
     const masterchefPools = await masterchefPoolsQuery(blocks);
-    const vampirePools = await vampirePoolsQuery(blocks);
     const users = await usersQuery(blocks);
 
     return {
-        poolsData: vampirePools.map((block, i) => {
-            // Can assume that the corresponding masterchef block of pools will be on the same index
-            const masterchefBlock = masterchefPools[i];
+        poolsData: masterchefPools.map((blockOfPools, i) => {
+            const yamPool = blockOfPools.find(pool => pool.id === YAM_POOL_ID);
+            const yamIncentiviserBalance = users[i].reduce((a, b) => a + b.balance, 0);
+            
+            const weight = yamPool ? (yamIncentiviserBalance / yamPool.balance) * yamPool.weight : 0;
 
-            return (
-                block.map(vampirePool => {
-                    const masterchefPool = masterchefBlock.find(masterchefPool => masterchefPool.id === vampirePool.masterchefPoolId)!;
-                
-                    // Calculates the weight of the vampire pool compared to the total weight of Masterchef
-                    const weight = (vampirePool.balance / masterchefPool?.balance) * masterchefPool?.weight;
+            return ({
+                weight: isFinite(weight) ? weight : 0
+            })
 
-                    return ({
-                        poolId: vampirePool.vampirePoolId, // Use vampirePoolId, since user ids will have this id as well 
-                        weight: isFinite(weight) ? weight : 0 // Can be NaN or Infinite if some value is zero
-                    })
-                })
-            )
         }),
 
         usersData: users
-    };
+    }
 }
