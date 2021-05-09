@@ -38,7 +38,7 @@ export default async function getDraculaDistribution(options: Options) {
     const final: {[key: string]: string} = {};
 
     Object.keys(balances).forEach(key => { 
-        final[key] = String(Math.floor(balances[key] * fraction));
+        final[key] = String(BigInt(Math.floor(balances[key] * fraction)));
         if(final[key] === "0") delete final[key];
     })
 
