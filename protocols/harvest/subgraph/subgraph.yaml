@@ -1,0 +1,243 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Masterchef
+    network: mainnet
+    source:
+      address: "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd"
+      abi: Masterchef
+      startBlock: 10736241 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - MasterchefPool
+        - Masterchef
+        - Change
+      abis:
+        - name: Masterchef
+          file: ./abis/Masterchef.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed uint256,uint256)
+          handler: masterchefDepositHandler
+        - event: Withdraw(indexed address,indexed uint256,uint256)
+          handler: masterchefWithdrawHandler
+      callHandlers:
+        - function: add(uint256,address,bool)
+          handler: masterchefAddHandler
+        - function: set(uint256,uint256,bool)
+          handler: masterchefSetHandler
+      file: ./src/mapping.ts
+
+# DAI_ETH_Proxy 0x895CC1b32Aa6f5FEdf0E113eAC556309Ad225322, Vault 0x203E97aa6eB65A1A02d9E80083414058303f241E
+  - kind: ethereum/contract
+    name: Harvest_DAI_ETH_Proxy
+    network: mainnet
+    source:
+      address: "0x895CC1b32Aa6f5FEdf0E113eAC556309Ad225322" # DAI_ETH_Proxy 0x895CC1b32Aa6f5FEdf0E113eAC556309Ad225322
+      abi: Strategy
+      startBlock: 11269924
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Strategy
+          file: ./abis/Strategy.json
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: ProfitLogInReward(uint256,uint256,uint256)
+          handler: harvestLogProfitHandler
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: Harvest_DAI_ETH_Proxy_Vault
+    network: mainnet
+    source:
+      address: "0x203E97aa6eB65A1A02d9E80083414058303f241E" # DAI_ETH_Proxy 0x895CC1b32Aa6f5FEdf0E113eAC556309Ad225322
+      abi: Vault
+      startBlock: 11269733
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: harvestTransferHandler
+      file: ./src/mapping.ts
+
+
+
+# DAI_ETH 0x923ca6dcef62030bed25aa3ef854f39dc45dda65, Vault 0x29EC64560ab14d3166222Bf07c3F29c4916E0027
+  - kind: ethereum/contract
+    name: Harvest_DAI_ETH
+    network: mainnet
+    source:
+      address: "0x923ca6dcef62030bed25aa3ef854f39dc45dda65" # DAI_ETH 0x923ca6dcef62030bed25aa3ef854f39dc45dda65
+      abi: Strategy
+      startBlock: 11999259
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Strategy
+          file: ./abis/Strategy.json
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: ProfitLogInReward(uint256,uint256,uint256)
+          handler: harvestLogProfitHandler
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: Harvest_DAI_ETH_Vault
+    network: mainnet
+    source:
+      address: "0x29EC64560ab14d3166222Bf07c3F29c4916E0027" # DAI_ETH 0x923ca6dcef62030bed25aa3ef854f39dc45dda65
+      abi: Vault
+      startBlock: 11998979
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: harvestTransferHandler
+      file: ./src/mapping.ts
+
+
+
+# USDC_ETH 0x923ca6dcef62030bed25aa3ef854f39dc45dda65, Vault 0x01bd09a1124960d9be04b638b142df9df942b04a
+  - kind: ethereum/contract
+    name: Harvest_USDC_ETH_Vault
+    network: mainnet
+    source:
+      address: "0x01bd09a1124960d9be04b638b142df9df942b04a" # USDC_ETH 0xd5d2adcb5e6ad20425b0650e4050c0ea9ec3cec0
+      abi: Vault
+      startBlock: 11269722
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: harvestTransferHandler
+      file: ./src/mapping.ts
+
+
+
+# USDT_ETH 0x180a71c5688ac7e2368890ef77b0036af8e261b6, Vault 0x64035b583c8c694627A199243E863Bb33be60745
+  - kind: ethereum/contract
+    name: Harvest_USDT_ETH
+    network: mainnet
+    source:
+      address: "0x180a71c5688ac7e2368890ef77b0036af8e261b6" # WBTC_ETH 0x180a71c5688ac7e2368890ef77b0036af8e261b6
+      abi: Strategy
+      startBlock: 11269849
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Strategy
+          file: ./abis/Strategy.json
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: ProfitLogInReward(uint256,uint256,uint256)
+          handler: harvestLogProfitHandler
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: Harvest_USDT_ETH_Vault
+    network: mainnet
+    source:
+      address: "0x64035b583c8c694627A199243E863Bb33be60745" # WBTC_ETH 0xdd1dfbb5a580e96c2723ccaf687227900f97f053
+      abi: Vault
+      startBlock: 11269716
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: harvestTransferHandler
+      file: ./src/mapping.ts
+
+
+
+# WBTC_ETH 0xdd1dfbb5a580e96c2723ccaf687227900f97f053, Vault 0x5c0a3f55aac52aa320ff5f280e77517cbaf85524
+  - kind: ethereum/contract
+    name: Harvest_WBTC_ETH
+    network: mainnet
+    source:
+      address: "0xdd1dfbb5a580e96c2723ccaf687227900f97f053" # WBTC_ETH 0xdd1dfbb5a580e96c2723ccaf687227900f97f053
+      abi: Strategy
+      startBlock: 11269930
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Strategy
+          file: ./abis/Strategy.json
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: ProfitLogInReward(uint256,uint256,uint256)
+          handler: harvestLogProfitHandler
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: Harvest_WBTC_ETH_Vault
+    network: mainnet
+    source:
+      address: "0x5c0a3f55aac52aa320ff5f280e77517cbaf85524" # WBTC_ETH 0xdd1dfbb5a580e96c2723ccaf687227900f97f053
+      abi: Vault
+      startBlock: 11269739
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - HarvestPool
+      abis:
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: harvestTransferHandler
+      file: ./src/mapping.ts

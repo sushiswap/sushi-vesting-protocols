@@ -1,0 +1,30 @@
+type HarvestPool @entity {
+  id: ID!
+  masterchefPoolId: BigInt!
+  balance: BigInt!
+  pricePerShare: BigInt!
+  users: [HarvestUser!]! @derivedFrom(field: "harvestPool")
+}
+
+type HarvestUser @entity {
+  id: ID!
+  address: String!
+  harvestPool: HarvestPool!
+  balance: BigInt!
+}
+
+
+
+type Masterchef @entity {
+  id: ID!
+  totalAllocPoint: BigInt!
+  poolLength: BigInt!
+}
+
+type MasterchefPool @entity {
+  id: ID!
+  masterchef: Masterchef!
+  allocPoint: BigInt!
+  balance: BigInt!
+  lastBlockUpdated: BigInt!
+}
