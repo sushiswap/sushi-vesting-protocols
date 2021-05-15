@@ -13,7 +13,7 @@ program
     .option('-s, --startBlock <number>')
     .requiredOption('-e, --endBlock <number>')
     .option('--step <number>')
-    .option('-p, --pathToBlacklisted <string>');
+    .option('-p, --pathToBlacklistList <string>');
 
 program.parse(process.argv);
 
@@ -24,8 +24,8 @@ async function main() {
         startBlock: Number(program.opts().startBlock ?? VESTING_START),
         endBlock: Number(program.opts().endBlock),
         step: Number(program.opts().step ?? DEFAULT_STEP),
-        totalVested: program.opts().step ? 
-            JSON.parse(fs.readFileSync(program.opts().pathToBlacklisted, 'utf8')) :
+        blacklistDistribution: program.opts().pathToBlacklistList ? 
+            JSON.parse(fs.readFileSync(program.opts().pathToBlacklistList, 'utf8')) :
             (await getDistribution({
                 startBlock: Number(program.opts().startBlock ?? VESTING_START),
                 endBlock: Number(program.opts().endBlock)

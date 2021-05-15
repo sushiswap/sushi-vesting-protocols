@@ -1,4 +1,5 @@
 import pageResults from 'graph-results-pager';
+import BigNumber from "bignumber.js";
 
 import { DRACULA_VESTING_SUBGRAPH, SUSHI_ADAPTER_ADDRESSES, DELAY } from './constants';
 import { MasterchefPool, VampirePool, VampireUser } from "../types/subgraphs/dracula_vesting";
@@ -59,8 +60,8 @@ async function masterchefPoolsQuery(blocks: number[]) {
     return masterchefPools.map(block => 
         block.map(pool => ({
             id: Number(pool.id),
-            weight: Number(pool.allocPoint) / Number(pool.masterchef?.totalAllocPoint), // Calculates the weight of the whole pool
-            balance: Number(pool.balance)
+            weight: new BigNumber(pool.allocPoint!).dividedBy(new BigNumber(pool.masterchef!.totalAllocPoint!)), // Calculates the weight of the whole pool
+            balance: new BigNumber(pool.balance!)
         })),
     );
 }
@@ -102,7 +103,7 @@ async function vampirePoolsQuery(blocks: number[]) {
             .map(pool => ({
                 vampirePoolId: Number(pool.id),
                 masterchefPoolId: Number(pool.victimPoolId),
-                balance: Number(pool.balance),
+                balance: new BigNumber(pool.balance!),
             }))
             .sort((a, b) => a.vampirePoolId - b.vampirePoolId)
     );
@@ -142,7 +143,7 @@ async function usersQuery(blocks: number[]) {
             .map(user => ({
                 user: user.id?.split("-")[0]!,
                 poolId: Number(user.id?.split("-")[1]),
-                balance: Number(user.balance)
+                balance: new BigNumber(user.balance!)
             }))
     );
 }
@@ -170,11 +171,11 @@ export default async function query({startBlock, endBlock, step}: {startBlock: n
                     const masterchefPool = masterchefBlock.find(masterchefPool => masterchefPool.id === vampirePool.masterchefPoolId)!;
                 
                     // Calculates the weight of the vampire pool compared to the total weight of Masterchef
-                    const weight = (vampirePool.balance / masterchefPool?.balance) * masterchefPool?.weight;
+                    const weight = (vampirePool.balance.dividedBy(masterchefPool.balance)).times(masterchefPool.weight);
 
                     return ({
                         poolId: vampirePool.vampirePoolId, // Use vampirePoolId, since user ids will have this id as well 
-                        weight: isFinite(weight) ? weight : 0 // Can be NaN or Infinite if some value is zero
+                        weight: weight.isFinite() ? weight : new BigNumber(0) // Can be NaN or Infinite if some value is zero
                     })
                 })
             )

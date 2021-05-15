@@ -1,36 +1,37 @@
 import { Command } from "commander";
 import fs from "fs";
-import { VESTING_START } from "./constants";
+import getDistribution from "sushi-vesting-query";
 
 import getDraculaDistribution from './index';
+import { DEFAULT_STEP, VESTING_START } from "./constants";
+
+import { Options } from "../types/index";
 
 const program = new Command();
-
-type Options = {
-    startBlock: number,
-    endBlock: number,
-    step: number | undefined,
-    totalVested: number
-}
 
 program
     .option('-s, --startBlock <number>')
     .requiredOption('-e, --endBlock <number>')
     .option('--step <number>')
-    .requiredOption('-t, --totalVested <bigint>');
+    .option('-p, --pathToBlacklistList <string>');
 
 program.parse(process.argv);
-
-const options: Options = {
-    startBlock: Number(program.opts().startBlock ?? VESTING_START),
-    endBlock: Number(program.opts().endBlock),
-    step: Number(program.opts().step),
-    totalVested: Number(program.opts().totalVested)
-}
 
 main();
 
 async function main() {
+    const options: Options = {
+        startBlock: Number(program.opts().startBlock ?? VESTING_START),
+        endBlock: Number(program.opts().endBlock),
+        step: Number(program.opts().step ?? DEFAULT_STEP),
+        blacklistDistribution: program.opts().pathToBlacklistList ? 
+            JSON.parse(fs.readFileSync(program.opts().pathToBlacklistList, 'utf8')) :
+            (await getDistribution({
+                startBlock: Number(program.opts().startBlock ?? VESTING_START),
+                endBlock: Number(program.opts().endBlock)
+            })).blacklisted
+    }
+
     const distribution = await getDraculaDistribution(options);
 
     if(!fs.existsSync('./outputs')) {

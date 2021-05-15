@@ -174,7 +174,7 @@ export default async function query({startBlock, endBlock, step}: {startBlock: n
                     return ({
                         harvestPoolAddress: harvestPool.harvestPoolAddress,
                         pricePerShare: harvestPool.pricePerShare,
-                        weight: weight // Can be NaN or Infinite if some value is zero
+                        weight: weight.isFinite() ? weight : new BigNumber(0) // Can be NaN or Infinite if some value is zero
                     })
                 })
             )

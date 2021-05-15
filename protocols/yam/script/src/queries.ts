@@ -1,4 +1,5 @@
 import pageResults from 'graph-results-pager';
+import BigNumber from "bignumber.js";
 
 import { YAM_VESTING_SUBGRAPH, DELAY, YAM_POOL_ID } from './constants';
 import { MasterchefPool, YamUser } from "../types/subgraphs/yam_vesting";
@@ -59,8 +60,8 @@ async function masterchefPoolsQuery(blocks: number[]) {
     return masterchefPools.map(block => 
         block.map(pool => ({
             id: Number(pool.id),
-            weight: Number(pool.allocPoint) / Number(pool.masterchef?.totalAllocPoint), // Calculates the weight of the whole pool
-            balance: Number(pool.balance)
+            weight: new BigNumber(pool.allocPoint!).dividedBy(new BigNumber(pool.masterchef!.totalAllocPoint!)), // Calculates the weight of the whole pool
+            balance: new BigNumber(pool.balance!)
         })),
     );
 }
@@ -98,7 +99,7 @@ async function usersQuery(blocks: number[]) {
         block
             .map(user => ({
                 user: user.id?.split("-")[0]!,
-                balance: Number(user.balance)
+                balance: new BigNumber(user.balance!)
             }))
     );
 }
@@ -118,12 +119,12 @@ export default async function query({startBlock, endBlock, step}: {startBlock: n
     return {
         poolsData: masterchefPools.map((blockOfPools, i) => {
             const yamPool = blockOfPools.find(pool => pool.id === YAM_POOL_ID);
-            const yamIncentiviserBalance = users[i].reduce((a, b) => a + b.balance, 0);
+            const yamIncentiviserBalance = users[i].reduce((a, b) => b.balance.plus(a), new BigNumber(0));
             
-            const weight = yamPool ? (yamIncentiviserBalance / yamPool.balance) * yamPool.weight : 0;
+            const weight = yamPool ? (yamIncentiviserBalance.dividedBy(yamPool.balance)).times(yamPool.weight) : new BigNumber(0);
 
             return ({
-                weight: isFinite(weight) ? weight : 0
+                weight: weight.isFinite() ? weight : new BigNumber(0)
             })
 
         }),

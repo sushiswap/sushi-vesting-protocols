@@ -10,3 +10,5 @@ export const DRACULA_VESTING_SUBGRAPH = "https://api.thegraph.com/subgraphs/name
 export const VESTING_START = 10959148;
 
 export const DEFAULT_STEP = 1000;
+
+export const MASTER_VAMPIRE_ADDRESS = "0xd12d68fd52b54908547ebc2cd77ec6ebbefd3099";

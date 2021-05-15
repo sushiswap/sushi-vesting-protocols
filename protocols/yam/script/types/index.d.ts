@@ -4,5 +4,5 @@ type Options = {
     startBlock: number,
     endBlock: number,
     step: number | undefined,
-    totalVested: number
+    blacklistDistribution: {[address: string]: string}
 }

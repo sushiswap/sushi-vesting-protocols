@@ -1,9 +1,10 @@
 import { Command } from "commander";
 import fs from "fs";
+import getDistribution from "sushi-vesting-query";
 
 import getYamDistribution from './index';
-
 import { DEFAULT_STEP, VESTING_START } from "./constants";
+
 import { Options } from "../types/index";
 
 const program = new Command();
@@ -12,20 +13,25 @@ program
     .option('-s, --startBlock <number>')
     .requiredOption('-e, --endBlock <number>')
     .option('--step <number>')
-    .requiredOption('-t, --totalVested <bigint>');
+    .option('-p, --pathToBlacklistList <string>');
 
 program.parse(process.argv);
-
-const options: Options = {
-    startBlock: Number(program.opts().startBlock ?? VESTING_START),
-    endBlock: Number(program.opts().endBlock),
-    step: Number(program.opts().step ?? DEFAULT_STEP),
-    totalVested: Number(program.opts().totalVested)
-}
 
 main();
 
 async function main() {
+    const options: Options = {
+        startBlock: Number(program.opts().startBlock ?? VESTING_START),
+        endBlock: Number(program.opts().endBlock),
+        step: Number(program.opts().step ?? DEFAULT_STEP),
+        blacklistDistribution: program.opts().pathToBlacklistList ? 
+            JSON.parse(fs.readFileSync(program.opts().pathToBlacklistList, 'utf8')) :
+            (await getDistribution({
+                startBlock: Number(program.opts().startBlock ?? VESTING_START),
+                endBlock: Number(program.opts().endBlock)
+            })).blacklisted
+    }
+
     const distribution = await getYamDistribution(options);
 
     if(!fs.existsSync('./outputs')) {

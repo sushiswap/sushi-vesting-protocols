@@ -41,7 +41,7 @@ export default async function getHarvestDistribution(options: Options) {
             .reduce((points, userKey) => (new BigNumber(balances[poolKey][userKey])).plus(points), new BigNumber(0));
 
         // Has to be translated through a map because of Harvest's contract design
-        const fraction = new BigNumber(options.totalVested[VAULT_POOL_MAP[poolKey]]).div(totalPoints);
+        const fraction = new BigNumber(options.blacklistDistribution[VAULT_POOL_MAP[poolKey]]).div(totalPoints);
 
         const users: {[key: string]: BigNumber} = {};
         Object.keys(balances[poolKey]).forEach(userKey => {

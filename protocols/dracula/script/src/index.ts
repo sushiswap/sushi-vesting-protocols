@@ -1,12 +1,10 @@
-import { DEFAULT_STEP, VESTING_START } from './constants';
+import BigNumber from "bignumber.js";
+
+import { DEFAULT_STEP, MASTER_VAMPIRE_ADDRESS, VESTING_START } from './constants';
 import query from './queries';
 
-type Options = {
-    startBlock: number | undefined,
-    endBlock: number,
-    step: number | undefined,
-    totalVested: number
-}
+import { Options } from "../types/index";
+
 
 export default async function getDraculaDistribution(options: Options) {
     options.startBlock = options.startBlock ?? VESTING_START;
@@ -14,7 +12,7 @@ export default async function getDraculaDistribution(options: Options) {
 
     const { poolsData, usersData } = await query({startBlock: options.startBlock, endBlock: options.endBlock, step: options.step});
 
-    const balances: {[key: string]: number} = {};
+    const balances: {[key: string]: BigNumber} = {};
 
     poolsData.forEach((block, i) => {
         const usersBlock = usersData[i];
@@ -23,22 +21,22 @@ export default async function getDraculaDistribution(options: Options) {
             const users = usersBlock.filter(user => user.poolId === pool.poolId)
             
             users.forEach(user => {
-                const points = user.balance * pool.weight;
+                const points = user.balance.times(pool.weight);
 
-                balances[user.user] = balances[user.user] ? balances[user.user] + points : points;
+                balances[user.user] = balances[user.user] ? balances[user.user].plus(points) : points;
             });
         });
     });
 
-    let totalPoints = 0;
-    Object.keys(balances).forEach(key => totalPoints += balances[key]);
+    let totalPoints = new BigNumber(0);
+    Object.keys(balances).forEach(key => totalPoints = balances[key].plus(totalPoints));
 
-    const fraction = options.totalVested / totalPoints;
+    const fraction = (new BigNumber(options.blacklistDistribution[MASTER_VAMPIRE_ADDRESS])).dividedBy(totalPoints);
 
     const final: {[key: string]: string} = {};
 
     Object.keys(balances).forEach(key => { 
-        final[key] = String(BigInt(Math.floor(balances[key] * fraction)));
+        final[key] = (balances[key].times(fraction)).integerValue().toFixed();
         if(final[key] === "0") delete final[key];
     })
 
