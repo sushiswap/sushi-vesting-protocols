@@ -5,13 +5,9 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ LufyCZ/VestingDracula",
-    "create-local": "graph create --node http://localhost:8020/ LufyCZ/VestingDracula",
-    "remove-local": "graph remove --node http://localhost:8020/ LufyCZ/VestingDracula",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 LufyCZ/VestingDracula"
-  },
-  "dependencies": {
-    "@graphprotocol/graph-cli": "0.20.0",
-    "@graphprotocol/graph-ts": "0.20.0"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ LufyCZ/VestingYam",
+    "create-local": "graph create --node http://localhost:8020/ LufyCZ/VestingYam",
+    "remove-local": "graph remove --node http://localhost:8020/ LufyCZ/VestingYam",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 LufyCZ/VestingYam"
   }
 }

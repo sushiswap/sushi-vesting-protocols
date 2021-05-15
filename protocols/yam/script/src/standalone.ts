@@ -1,17 +1,12 @@
 import { Command } from "commander";
 import fs from "fs";
-import { VESTING_START } from "./constants";
 
 import getYamDistribution from './index';
 
-const program = new Command();
+import { DEFAULT_STEP, VESTING_START } from "./constants";
+import { Options } from "../types/index";
 
-type Options = {
-    startBlock: number,
-    endBlock: number,
-    step: number | undefined,
-    totalVested: number
-}
+const program = new Command();
 
 program
     .option('-s, --startBlock <number>')
@@ -24,7 +19,7 @@ program.parse(process.argv);
 const options: Options = {
     startBlock: Number(program.opts().startBlock ?? VESTING_START),
     endBlock: Number(program.opts().endBlock),
-    step: Number(program.opts().step),
+    step: Number(program.opts().step ?? DEFAULT_STEP),
     totalVested: Number(program.opts().totalVested)
 }
 

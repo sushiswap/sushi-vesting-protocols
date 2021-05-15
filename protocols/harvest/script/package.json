@@ -1,16 +1,11 @@
 {
-  "name": "sushi-vesting-dracula",
+  "name": "sushi-vesting-harvest",
   "author": "LufyCZ",
   "license": "MIT",
   "version": "1.0.0",
   "dependencies": {
-    "@types/node": "^14.14.36",
     "bignumber.js": "^9.0.1",
-    "commander": "^7.2.0",
-    "dotenv": "^8.2.0",
-    "graph-results-pager": "LufyCZ/graph-results-pager#types",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.2.3"
+    "sushi-vesting-query": "https://github.com/sushiswap/sushi-vesting-query.git"
   },
   "scripts": {
     "standalone": "ts-node src/standalone"

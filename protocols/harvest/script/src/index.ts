@@ -1,16 +1,13 @@
-import { DEFAULT_STEP, VESTING_START } from './constants';
-import query from './queries';
-
 import BigNumber from "bignumber.js";
 
-const VAULT_POOL_MAP = require('./constants').VAULT_POOL_MAP
+import query from './queries';
 
-type Options = {
-    startBlock: number | undefined,
-    endBlock: number,
-    step: number | undefined,
-    totalVested: {[address: string]: string}
-}
+import { DEFAULT_STEP, VESTING_START } from './constants';
+import { Options } from "../types/index";
+
+const VAULT_POOL_MAP = require('./constants').VAULT_POOL_MAP;
+
+
 
 export default async function getHarvestDistribution(options: Options) {
     options.startBlock = options.startBlock ?? VESTING_START;

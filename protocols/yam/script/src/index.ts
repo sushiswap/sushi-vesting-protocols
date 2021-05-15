@@ -1,12 +1,9 @@
-import { DEFAULT_STEP, VESTING_START } from './constants';
 import query from './queries';
 
-type Options = {
-    startBlock: number,
-    endBlock: number,
-    step: number | undefined,
-    totalVested: number
-}
+import { DEFAULT_STEP, VESTING_START } from './constants';
+import { Options } from "../types/index";
+
+
 
 export default async function getYamDistribution(options: Options) {
     options.startBlock = options.startBlock ?? VESTING_START;
