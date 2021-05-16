@@ -396,6 +396,19 @@
   dependencies:
     assemblyscript "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
 
+"@lufycz/sushi-data@^2.0.0-canary-22":
+  version "2.0.0-canary-22"
+  resolved "https://registry.yarnpkg.com/@lufycz/sushi-data/-/sushi-data-2.0.0-canary-22.tgz#afa83f9f11c82fb028ccbbf4e8e39030d1fbb66c"
+  integrity sha512-Xh4FicHGC9YM7pFTQMW9ulBHwGJ9t2D2sxmTEaOMa9IBEjHGo+wkA9pIBM3wdr9ecDiThqVQAhxuSKpaoj/bqQ==
+  dependencies:
+    date-fns "^2.17.0"
+    graph-results-pager LufyCZ/graph-results-pager#types
+    graphql "14.5.8"
+    graphql-request "^3.4.0"
+    isomorphic-ws "^4.0.1"
+    subscriptions-transport-ws "0.9.16"
+    ws "^7.4.4"
+
 "@protobufjs/utf8@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
@@ -732,7 +745,7 @@ bech32@1.1.4:
   resolved "https://registry.yarnpkg.com/bech32/-/bech32-1.1.4.tgz#e38c9f37bf179b8eb16ae3a772b40c356d4832e9"
   integrity sha512-s0IrSOzLlbvX7yp4WBfPITzpAU8sqQcpsmwXDiKwrG4r491vwCO/XpejasRNl0piBMe/DvP4Tz0mIS/X1DPJBQ==
 
-bignumber.js@^9.0.0, bignumber.js@^9.0.1:
+bignumber.js@^9.0.0:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
   integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
@@ -3515,19 +3528,6 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-"sushi-vesting-query@https://github.com/sushiswap/sushi-vesting-query.git":
-  version "1.0.0"
-  resolved "https://github.com/sushiswap/sushi-vesting-query.git#e45213833b3eea46e7cc4893156f55cc6083f620"
-  dependencies:
-    "@sushiswap/sushi-data" lufycz/sushi-data#vesting
-    axios "^0.21.1"
-    commander "^7.0.0"
-    ethereumjs-util "^7.0.8"
-    ethers "^5.0.31"
-    fs "^0.0.1-security"
-    ts-node "^9.1.1"
-    typescript "^4.1.3"
-
 symbol-observable@^1.0.4:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
@@ -3754,6 +3754,11 @@ ws@^5.2.0:
   integrity sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==
   dependencies:
     async-limiter "~1.0.0"
+
+ws@^7.4.4:
+  version "7.4.5"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.5.tgz#a484dd851e9beb6fdb420027e3885e8ce48986c1"
+  integrity sha512-xzyu3hFvomRfXKH8vOFMU3OguG6oOvhXMo3xsGy3xWExqaM2dxBbVxuD99O7m3ZUFMvvscsZDqxfgMaRr/Nr1g==
 
 xtend@^4.0.0:
   version "4.0.2"

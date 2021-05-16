@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import fs from "fs";
-import getDistribution from "sushi-vesting-query";
+import getDistribution from "@sushiswap/sushi-vesting-query";
 
 import getYamDistribution from './index';
 import { DEFAULT_STEP, VESTING_START } from "./constants";

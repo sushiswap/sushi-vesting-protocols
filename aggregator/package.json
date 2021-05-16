@@ -2,5 +2,11 @@
     "name": "sushi-vesting-aggregator",
     "author": "LufyCZ",
     "license": "MIT",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "dependencies": {
+        "@lufycz/sushi-data": "^2.0.0-canary-22"
+    },
+    "scripts": {
+        "standalone": "ts-node src/standalone"
+      }
 }

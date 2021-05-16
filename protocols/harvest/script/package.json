@@ -3,10 +3,7 @@
   "author": "LufyCZ",
   "license": "MIT",
   "version": "1.0.0",
-  "dependencies": {
-    "bignumber.js": "^9.0.1",
-    "sushi-vesting-query": "https://github.com/sushiswap/sushi-vesting-query.git"
-  },
+  "main": "./src/index",
   "scripts": {
     "standalone": "ts-node src/standalone"
   }

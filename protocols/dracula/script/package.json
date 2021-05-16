@@ -3,6 +3,7 @@
   "author": "LufyCZ",
   "license": "MIT",
   "version": "1.0.0",
+  "main": "./src/index",
   "scripts": {
     "standalone": "ts-node src/standalone"
   }
