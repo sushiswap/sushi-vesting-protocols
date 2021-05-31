@@ -1,0 +1,316 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Masterchef
+    network: mainnet
+    source:
+      address: "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd"
+      abi: Masterchef
+      startBlock: 10736241 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - MasterchefPool
+        - Masterchef
+        - Change
+      abis:
+        - name: Masterchef
+          file: ./abis/Masterchef.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed uint256,uint256)
+          handler: masterchefDepositHandler
+        - event: Withdraw(indexed address,indexed uint256,uint256)
+          handler: masterchefWithdrawHandler
+      callHandlers:
+        - function: add(uint256,address,bool)
+          handler: masterchefAddHandler
+        - function: set(uint256,uint256,bool)
+          handler: masterchefSetHandler
+      file: ./src/mapping.ts
+
+# JARS
+
+# USDC/ETH Jar - 0x8c2d16b7f6d3f989eb4878ecf13d695a7d504e43, Strategy - 0xaa430e7886b60a925ac77e79e91924ce544b0690
+  - kind: ethereum/contract
+    name: Pickle_USDC/ETH
+    network: mainnet
+    source:
+      address: "0x8c2d16b7f6d3f989eb4878ecf13d695a7d504e43"
+      abi: Jar
+      startBlock: 11474355
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: pickleTransferHandler
+      file: ./src/mapping.ts
+
+# USDT/ETH Jar - 0xa7a37ae5cb163a3147de83f15e15d8e5f94d6bce, Strategy - 0x10d2740ffb6c38f14221df8346d07253cef8902d
+  - kind: ethereum/contract
+    name: Pickle_USDT/ETH
+    network: mainnet
+    source:
+      address: "0xa7a37ae5cb163a3147de83f15e15d8e5f94d6bce"
+      abi: Jar
+      startBlock: 11474365
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: pickleTransferHandler
+      file: ./src/mapping.ts
+
+# YFI/ETH Jar - 0x3261d9408604cc8607b687980d40135afa26ffed, Strategy - 0x8785a589237a8699afaaf5deb407010db0950043
+  - kind: ethereum/contract
+    name: Pickle_YFI/ETH
+    network: mainnet
+    source:
+      address: "0x3261d9408604cc8607b687980d40135afa26ffed"
+      abi: Jar
+      startBlock: 11478789
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: pickleTransferHandler
+      file: ./src/mapping.ts
+
+# yveCRV-DAO/ETH Jar - 0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48, Strategy - 0x5807424c47ea796d4c6be03b840ccc8c8a642711
+  - kind: ethereum/contract
+    name: Pickle_yveCRV-DAO/ETH
+    network: mainnet
+    source:
+      address: "0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48"
+      abi: Jar
+      startBlock: 11804602
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: pickleTransferHandler
+      file: ./src/mapping.ts
+
+# DAI/ETH Jar - 0x55282da27a3a02ffe599f6d11314d239dac89135, Strategy - 0x8e4e4cfca2ff1db24708dfae8c97385cc63149e1
+  - kind: ethereum/contract
+    name: Pickle_DAI/ETH
+    network: mainnet
+    source:
+      address: "0x55282da27a3a02ffe599f6d11314d239dac89135"
+      abi: Jar
+      startBlock: 11471457
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: pickleTransferHandler
+      file: ./src/mapping.ts
+
+# WBTC/ETH Jar - 0xde74b6c547bd574c3527316a2ee30cd8f6041525, Strategy - 0xced8eed93677bcf0100f05a38d5b0b2761b09f26
+  - kind: ethereum/contract
+    name: Pickle_WBTC/ETH
+    network: mainnet
+    source:
+      address: "0xde74b6c547bd574c3527316a2ee30cd8f6041525"
+      abi: Jar
+      startBlock: 11474413
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: pickleTransferHandler
+      file: ./src/mapping.ts
+
+
+
+
+# Strategies
+
+# USDC/ETH Jar - 0x8c2d16b7f6d3f989eb4878ecf13d695a7d504e43, Strategy - 0xaa430e7886b60a925ac77e79e91924ce544b0690
+  - kind: ethereum/contract
+    name: Pickle_USDC/ETH_Strategy
+    network: mainnet
+    source:
+      address: "0xaa430e7886b60a925ac77e79e91924ce544b0690"
+      abi: Strategy
+      startBlock: 11474635
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+        - name: Strategy
+          file: ./abis/Strategy.json
+      callHandlers:
+        - function: harvest()
+          handler: pickleHarvestHandler
+      file: ./src/mapping.ts
+
+# USDT/ETH Jar - 0xa7a37ae5cb163a3147de83f15e15d8e5f94d6bce, Strategy - 0x10d2740ffb6c38f14221df8346d07253cef8902d
+  - kind: ethereum/contract
+    name: Pickle_USDT/ETH_Strategy
+    network: mainnet
+    source:
+      address: "0x10d2740ffb6c38f14221df8346d07253cef8902d"
+      abi: Strategy
+      startBlock: 11474841
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+        - name: Strategy
+          file: ./abis/Strategy.json
+      callHandlers:
+        - function: harvest()
+          handler: pickleHarvestHandler
+      file: ./src/mapping.ts
+
+# YFI/ETH Jar - 0x3261d9408604cc8607b687980d40135afa26ffed, Strategy - 0x8785a589237a8699afaaf5deb407010db0950043
+  - kind: ethereum/contract
+    name: Pickle_YFI/ETH_Strategy
+    network: mainnet
+    source:
+      address: "0x8785a589237a8699afaaf5deb407010db0950043"
+      abi: Strategy
+      startBlock: 11478768
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+        - name: Strategy
+          file: ./abis/Strategy.json
+      callHandlers:
+        - function: harvest()
+          handler: pickleHarvestHandler
+      file: ./src/mapping.ts
+
+# yveCRV-DAO/ETH Jar - 0x5eff6d166d66bacbc1bf52e2c54dd391ae6b1f48, Strategy - 0x5807424c47ea796d4c6be03b840ccc8c8a642711
+  - kind: ethereum/contract
+    name: Pickle_yveCRV-DAO/ETH_Strategy
+    network: mainnet
+    source:
+      address: "0x5807424c47ea796d4c6be03b840ccc8c8a642711"
+      abi: Strategy
+      startBlock: 11478768
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+        - name: Strategy
+          file: ./abis/Strategy.json
+      callHandlers:
+        - function: harvest()
+          handler: pickleHarvestHandler
+      file: ./src/mapping.ts
+
+# DAI/ETH Jar - 0x55282da27a3a02ffe599f6d11314d239dac89135, Strategy - 0x8e4e4cfca2ff1db24708dfae8c97385cc63149e1
+  - kind: ethereum/contract
+    name: Pickle_DAI/ETH_Strategy
+    network: mainnet
+    source:
+      address: "0x8e4e4cfca2ff1db24708dfae8c97385cc63149e1"
+      abi: Strategy
+      startBlock: 11474251
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+        - name: Strategy
+          file: ./abis/Strategy.json
+      callHandlers:
+        - function: harvest()
+          handler: pickleHarvestHandler
+      file: ./src/mapping.ts
+
+# WBTC/ETH Jar - 0xde74b6c547bd574c3527316a2ee30cd8f6041525, Strategy - 0xced8eed93677bcf0100f05a38d5b0b2761b09f26
+  - kind: ethereum/contract
+    name: Pickle_WBTC/ETH_Strategy
+    network: mainnet
+    source:
+      address: "0xced8eed93677bcf0100f05a38d5b0b2761b09f26"
+      abi: Strategy
+      startBlock: 11474860
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - PicklePool
+      abis:
+        - name: Jar
+          file: ./abis/Jar.json
+        - name: Strategy
+          file: ./abis/Strategy.json
+      callHandlers:
+        - function: harvest()
+          handler: pickleHarvestHandler
+      file: ./src/mapping.ts

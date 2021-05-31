@@ -1,0 +1,30 @@
+type PicklePool @entity {
+  id: ID!
+  masterchefPoolId: BigInt!
+  balance: BigInt!
+  pricePerShare: BigInt!
+  users: [PickleUser!]! @derivedFrom(field: "picklePool")
+}
+
+type PickleUser @entity {
+  id: ID!
+  address: String!
+  picklePool: PicklePool!
+  balance: BigInt!
+}
+
+
+
+type Masterchef @entity {
+  id: ID!
+  totalAllocPoint: BigInt!
+  poolLength: BigInt!
+}
+
+type MasterchefPool @entity {
+  id: ID!
+  masterchef: Masterchef!
+  allocPoint: BigInt!
+  balance: BigInt!
+  lastBlockUpdated: BigInt!
+}
