@@ -5,6 +5,7 @@ import { sushi } from "@lufycz/sushi-data";
 import getDraculaDistribution from "sushi-vesting-dracula";
 import getYamDistribution from "sushi-vesting-yam";
 import getHarvestDistribution from "sushi-vesting-harvest";
+import getPickleDistribution from "sushi-vesting-pickle";
 
 import { parseBalanceMap } from './merkle/parse-balance-map';
 
@@ -18,6 +19,7 @@ export default async function getProtocolDistribution(options: Options) {
     protocolList.push(await getDraculaDistribution(options));
     protocolList.push(await getYamDistribution(options));
     protocolList.push(await getHarvestDistribution(options));
+    protocolList.push(await getPickleDistribution(options));
 
     const balances: {[key: string]: BigNumber} = {};
 

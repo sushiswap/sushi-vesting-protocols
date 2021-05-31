@@ -5,6 +5,7 @@
     "protocols/dracula/*",
     "protocols/yam/*",
     "protocols/harvest/*",
+    "protocols/pickle/*",
     "aggregator"
   ],
   "dependencies": {
