@@ -12,6 +12,7 @@ import { parseBalanceMap } from './merkle/parse-balance-map';
 
 import { Options } from "../types/index";
 
+import redirects from './redirects.json';
 
 export default async function getProtocolDistribution(options: Options) {
     const protocolList: {[key: string]: string}[] = [];
@@ -35,6 +36,16 @@ export default async function getProtocolDistribution(options: Options) {
     })
 
     const claimedList = await sushi.vesting.users({block: options.claimBlock, type: "protocol"})
+
+    // Redirect
+    claimedList.forEach(claim => redirects.find(redirect => claim.id === redirect.from)?.to ?? claim.id);
+    Object.keys(balances).forEach(userKey => {
+        const newAddress = redirects.find(redirect => redirect.from === userKey)?.to;
+        if(newAddress) {
+            balances[newAddress] = balances[userKey];
+            delete balances[userKey];
+        }
+    })
 
     // Subtract the claimed amounts
     Object.keys(balances).forEach(userKey => {

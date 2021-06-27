@@ -1,0 +1,32 @@
+[
+    {
+        "from": "0x8135908bbcb583d65978accfe3da6ca927185eb1",
+        "to": "0x5ea266de503d19cbc2c62777f076f0d4858e5dd5",
+        "proof": "https://etherscan.io/verifySig/2315"
+    },
+
+    {
+        "from": "0x3a6ab6726dab32b8fca113bb48f176e4accd79b6",
+        "to": "0x19172dde1570107bfba26ab156ae64d566e2f0e2",
+        "proof": "https://etherscan.io/verifySig/2354"
+    },
+
+    {
+        "from": "0xb1adceddb2941033a090dd166a462fe1c2029484",
+        "to": "0xd409cea9dd8db30504168063953ce1fa20748cab",
+        "proof": "https://etherscan.io/verifySig/2629"
+    },
+
+    {
+        "from": "0x9ed629bc305c5731d43de27cbbe8f77976893c2b",
+        "to": "0xbdfa4f4492dd7b7cf211209c4791af8d52bf5c50",
+        "proof": 
+        {
+            "address": "0x9eD629Bc305c5731D43de27Cbbe8F77976893c2b",
+            "msg": "I want my vested sushi redirected to address : 0xbDfA4f4492dD7b7Cf211209C4791AF8d52BF5c50\n",
+            "sig": "0xf5ef161ad23b713ce17b833312d68c2cc71d06328257dfec5490e082c28b6dbc7cc88debc279679f2169d46fbb7057cf4d73019417d334e9e1e32dfd1189a4f01c",
+            "version": "2"
+        },
+        "comment": "Wouldn't verify on Etherscan, but https://www.myetherwallet.com/interface/verify-message and https://app.mycrypto.com/verify-message verified it"
+    }
+]
