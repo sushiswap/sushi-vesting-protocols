@@ -3,6 +3,7 @@
   "private": true,
   "workspaces": [
     "protocols/alpha",
+    "protocols/cream",
     "protocols/dracula/*",
     "protocols/yam/*",
     "protocols/harvest/*",

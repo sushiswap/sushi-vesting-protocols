@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 import { sushi } from "@lufycz/sushi-data";
 
 import getAlphaDistribution from "sushi-vesting-alpha";
+import getCreamDistribution from "sushi-vesting-cream";
 import getDraculaDistribution from "sushi-vesting-dracula";
 import getYamDistribution from "sushi-vesting-yam";
 import getHarvestDistribution from "sushi-vesting-harvest";
@@ -19,6 +20,7 @@ export default async function getProtocolDistribution(options: Options) {
 
     // Will be fetching synchronously to not clog the API
     protocolList.push(await getAlphaDistribution(options));
+    protocolList.push(await getCreamDistribution(options));
     protocolList.push(await getDraculaDistribution(options));
     protocolList.push(await getYamDistribution(options));
     protocolList.push(await getHarvestDistribution(options));
