@@ -65,6 +65,12 @@ export default async function getProtocolDistribution(options: Options) {
         final[userKey] = balances[userKey].integerValue().toFixed();
     })
 
+    const totalBlacklisted = Object.values(options.blacklistDistribution).reduce((acc,amount) => acc + BigInt(amount), BigInt(0))
+    const totalToDistribute = Object.values(final).reduce((acc,amount) => acc + BigInt(amount), BigInt(0))
+
+    console.log(`totalBlacklisted: ${totalBlacklisted / BigInt(1e18)}`)
+    console.log(`totalToDistribute: ${totalToDistribute / BigInt(1e18)}`)
+
     return {
         amounts: final,
         merkle: parseBalanceMap(final)
