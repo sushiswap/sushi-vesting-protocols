@@ -39,7 +39,16 @@ def get_event_type(event):
     else:
         raise Exception('event type not recognized')
 
-def get_distribution(vesting_end_block, pool_vested_sushi_amounts):
+def update_address_cumulative_percentage(address_mapping, pool_balance, block_time, pool_start_block_time):
+    for address_record in address_mapping.values():
+        lapsed_time_from_last_update = block_time - address_record.last_update_block_time
+        cumulative_lapsed_time = address_record.last_update_block_time - pool_start_block_time
+        if (cumulative_lapsed_time + lapsed_time_from_last_update):
+            address_record.cumulative_percentage = (address_record.previous_percentage * lapsed_time_from_last_update + address_record.cumulative_percentage * cumulative_lapsed_time) * Decimal(1e18) / (cumulative_lapsed_time + lapsed_time_from_last_update) / Decimal(1e18)
+        address_record.previous_percentage = address_record.balance*Decimal(1e18) / pool_balance / Decimal(1e18) if pool_balance else 0
+        address_record.last_update_block_time = block_time
+
+def get_distribution(vesting_end_block, vesting_end_block_time,pool_vested_sushi_amounts):
     for symbol, contract_address in CRSLP_CONTRACT_ADDRESSES.items():
         pool_vested_sushi_amount = int(pool_vested_sushi_amounts.get(contract_address.lower(), 0))
         if not pool_vested_sushi_amounts:
@@ -86,13 +95,9 @@ def get_distribution(vesting_end_block, pool_vested_sushi_amounts):
                         address_mapping[_to] = address_record
                         address_record.previous_percentage = amount * Decimal(1e18) / pool_balance / Decimal(1e18) if pool_balance else 0
                 # update all addresses' cumulative percentage
-                for address_record in address_mapping.values():
-                    lapsed_time_from_last_update = block_time - address_record.last_update_block_time
-                    cumulative_lapsed_time = address_record.last_update_block_time - pool_start_block_time
-                    if (cumulative_lapsed_time + lapsed_time_from_last_update):
-                        address_record.cumulative_percentage = (address_record.previous_percentage * lapsed_time_from_last_update + address_record.cumulative_percentage * cumulative_lapsed_time) * Decimal(1e18) / (cumulative_lapsed_time + lapsed_time_from_last_update) / Decimal(1e18)
-                    address_record.previous_percentage = address_record.balance*Decimal(1e18) / pool_balance / Decimal(1e18) if pool_balance else 0
-                    address_record.last_update_block_time = block_time
+                update_address_cumulative_percentage(address_mapping, pool_balance, block_time, pool_start_block_time)
+            # in case the timestamp of the last event collected is smaller than the desired vesting end block timestamp
+            update_address_cumulative_percentage(address_mapping, pool_balance, vesting_end_block_time, pool_start_block_time)
         # output. might write empty file
         if not os.path.isdir(OUTPUT_PATH):
             os.mkdir(OUTPUT_PATH)

@@ -93,4 +93,9 @@ def get_block_number(datetime_object):
     resp = requests.post(BLOCKLYTICS_SUBGRAPH_URL, json={'query':query_string})
     return int(resp.json()['data']['blocks'][0]['number'])
 
+def get_block_time(block_number):
+    query_string = f"{{blocks(where: {{ number: {block_number} }}) {{timestamp}}}}"
+    resp = requests.post(BLOCKLYTICS_SUBGRAPH_URL, json={'query':query_string})
+    return int(resp.json()['data']['blocks'][0]['timestamp'])
+
 
