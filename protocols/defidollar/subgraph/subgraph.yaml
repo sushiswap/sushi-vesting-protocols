@@ -1,0 +1,48 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: DFDETH
+    network: mainnet
+    source:
+      address: "0x81b53a22D51D6769093bEC1158f134fc6b114F4B"
+      abi: SushiDFDMiner
+      startBlock: 11776909 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - User
+      abis:
+        - name: SushiDFDMiner
+          file: ./abis/SushiDFDMiner.json
+      eventHandlers:
+        - event: Staked(indexed address,uint256)
+          handler: stakedHandler
+        - event: SushiPaid(indexed address,uint256)
+          handler: sushiPaidHandler
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: DUSTETH
+    network: mainnet
+    source:
+      address: "0x47744B96f799A61874a3cd73b394B7FEAA6c3E19"
+      abi: SushiDFDMiner
+      startBlock: 11777086 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - User
+      abis:
+        - name: SushiDFDMiner
+          file: ./abis/SushiDFDMiner.json
+      eventHandlers:
+        - event: Staked(indexed address,uint256)
+          handler: stakedHandler
+        - event: SushiPaid(indexed address,uint256)
+          handler: sushiPaidHandler
+      file: ./src/mapping.ts

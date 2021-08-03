@@ -4,6 +4,7 @@
   "workspaces": [
     "protocols/alpha",
     "protocols/cream",
+    "protocols/defidollar/*",
     "protocols/dracula/*",
     "protocols/yam/*",
     "protocols/harvest/*",
@@ -20,5 +21,8 @@
     "graph-results-pager": "LufyCZ/graph-results-pager#types",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
+  },
+  "scripts": {
+    "standalone": "ts-node aggregator/src/standalone.ts"
   }
 }
