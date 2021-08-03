@@ -5,7 +5,7 @@ import BigNumber from "bignumber.js";
 
 import { Options } from "../types/index";
 
-const config = dotenv.config({path: "../.env"}).parsed!
+const config = dotenv.config({path: __filename.replace("protocols/alpha/src/index.ts", ".env")}).parsed!
 const path = __filename.replace("src/index.ts", "").concat("script/nam");
 
 export default async function getAlphaDistribution(options: Options) {
