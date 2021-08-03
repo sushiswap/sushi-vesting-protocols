@@ -7,7 +7,7 @@ This is a monorepo which contains vesting scripts for several protocols that hav
 * ``yarn``
 * ``yarn run standalone -s <startBlock> -e <endBlock>``
 
-Resulting files will be under the aggregator/outputs folder
+Resulting files will be under the outputs folder
 
 ## Options
 `-s` - Start Block, defaults to 10959148 (vesting start), defines the start of the period of the calculation
