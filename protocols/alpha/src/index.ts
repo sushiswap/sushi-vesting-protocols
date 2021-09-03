@@ -6,11 +6,9 @@ import BigNumber from "bignumber.js";
 import { Options } from "../types/index";
 
 const config = dotenv.config({path: __filename.replace("protocols/alpha/src/index.ts", ".env")}).parsed!
-const path = __filename.replace("src/index.ts", "").concat("script/nam");
+const path = __filename.replace("src/index.ts", "").concat("script");
 
 export default async function getAlphaDistribution(options: Options) {
-    if(!fs.existsSync("script")) return {}
-    
     fs.writeFileSync(path + "/configs/end_block.json", String(options.endBlock));
     fs.writeFileSync(path + "/data/sushi_blacklist.json", JSON.stringify(options.blacklistDistribution, null, 1))
 
