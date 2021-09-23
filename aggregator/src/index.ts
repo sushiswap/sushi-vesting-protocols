@@ -39,10 +39,10 @@ export default async function getProtocolDistribution(options: Options) {
         })
     })
 
-    const claimedList = await sushi.vesting.users({block: options.claimBlock, type: "protocol"})
+    const claimedList: any = [] // will be done in one go
 
     // Redirect
-    claimedList.forEach(claim => redirects.find(redirect => claim.id === redirect.from)?.to ?? claim.id);
+    //claimedList.forEach(claim => redirects.find(redirect => claim.id === redirect.from)?.to ?? claim.id);
     Object.keys(balances).forEach(userKey => {
         const newAddress = redirects.find(redirect => redirect.from === userKey)?.to;
         if(newAddress) {
@@ -52,11 +52,11 @@ export default async function getProtocolDistribution(options: Options) {
     })
 
     // Subtract the claimed amounts
-    Object.keys(balances).forEach(userKey => {
-        const claimedAmount = claimedList.find(user => user.id === userKey)?.totalClaimed ?? new BigNumber(0);
+    // Object.keys(balances).forEach(userKey => {
+    //     const claimedAmount = claimedList.find(user => user.id === userKey)?.totalClaimed ?? new BigNumber(0);
 
-        balances[userKey] = balances[userKey].minus(claimedAmount);
-    })
+    //     balances[userKey] = balances[userKey].minus(claimedAmount);
+    // })
 
     // Prepare for finalization
     const final: {[key: string]: string} = {};
