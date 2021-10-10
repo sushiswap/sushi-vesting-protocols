@@ -428,10 +428,10 @@
   dependencies:
     assemblyscript "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
 
-"@lufycz/sushi-data@^2.0.0-canary-22":
-  version "2.0.0-canary-22"
-  resolved "https://registry.yarnpkg.com/@lufycz/sushi-data/-/sushi-data-2.0.0-canary-22.tgz#afa83f9f11c82fb028ccbbf4e8e39030d1fbb66c"
-  integrity sha512-Xh4FicHGC9YM7pFTQMW9ulBHwGJ9t2D2sxmTEaOMa9IBEjHGo+wkA9pIBM3wdr9ecDiThqVQAhxuSKpaoj/bqQ==
+"@lufycz/sushi-data@^2.0.0-canary.26":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@lufycz/sushi-data/-/sushi-data-2.0.0-canary-25.tgz#13615d864a59fc4ad26da2ac96b6751be74cf97c"
+  integrity sha512-+aBy6JaPeash4xynpYWIZuFJiBNeI7XR9EIemniHpmU2rCbgF4VceKZBDfju22UstnPzhYYnIAnSBHxvP1ajsA==
   dependencies:
     date-fns "^2.17.0"
     graph-results-pager LufyCZ/graph-results-pager#types
@@ -467,7 +467,7 @@
     subscriptions-transport-ws "0.9.16"
     ws "7.2.0"
 
-"@sushiswap/sushi-vesting-query@^1.0.5":
+"@sushiswap/sushi-vesting-query@latest":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@sushiswap/sushi-vesting-query/-/sushi-vesting-query-1.0.5.tgz#de376438ced01f99a2c98ec0c8d5bf9508f70483"
   integrity sha512-WOJ/MS7bo5cJGisf+MDWUftCXIi56gogOa8z9XVofsauGPDBvyMvPbbYo+HJaxZQX8jDYDt6OEkiJlEjEwvv1w==
