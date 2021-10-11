@@ -13,7 +13,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     vesting_end_block = int(args.e)
     vesting_cutoff_block = get_block_number(datetime(year=2021, month=3, day=29))
-    vesting_end_block = vesting_cutoff_block if vesting_end_block > vesting_cutoff_block else vesting_end_block
+    # datetime uses localtime
+    # vesting_end_block = vesting_cutoff_block if vesting_end_block > vesting_cutoff_block else vesting_end_block
     vesting_end_block_time = get_block_time(vesting_end_block)
     path_to_blacklist_list = args.p
     if not path_to_blacklist_list:
