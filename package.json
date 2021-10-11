@@ -9,6 +9,7 @@
     "protocols/yam/*",
     "protocols/harvest/*",
     "protocols/pickle/*",
+    "protocols/badger",
     "aggregator"
   ],
   "dependencies": {

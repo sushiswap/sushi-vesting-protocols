@@ -428,10 +428,10 @@
   dependencies:
     assemblyscript "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
 
-"@lufycz/sushi-data@^2.0.0-canary.26":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@lufycz/sushi-data/-/sushi-data-2.0.0-canary-25.tgz#13615d864a59fc4ad26da2ac96b6751be74cf97c"
-  integrity sha512-+aBy6JaPeash4xynpYWIZuFJiBNeI7XR9EIemniHpmU2rCbgF4VceKZBDfju22UstnPzhYYnIAnSBHxvP1ajsA==
+"@lufycz/sushi-data@2.0.0-canary.30":
+  version "2.0.0-canary.30"
+  resolved "https://registry.yarnpkg.com/@lufycz/sushi-data/-/sushi-data-2.0.0-canary.30.tgz#b2640a82161285d6716dec44cb0e0dfdcd6959f6"
+  integrity sha512-IMtbac5GCfgwqWFgOCOqZ/pjisnQ6YqeylfuJ/1ZTrergz7Y6zqNUHPuZyngeHBBWchMHkKM++QvbLCA+nX85A==
   dependencies:
     date-fns "^2.17.0"
     graph-results-pager LufyCZ/graph-results-pager#types

@@ -9,6 +9,7 @@ import getDraculaDistribution from "sushi-vesting-dracula";
 import getYamDistribution from "sushi-vesting-yam";
 import getHarvestDistribution from "sushi-vesting-harvest";
 import getPickleDistribution from "sushi-vesting-pickle";
+import getBadgerDistribution from 'sushi-vesting-badger';
 
 import { parseBalanceMap } from './merkle/parse-balance-map';
 
@@ -27,6 +28,7 @@ export default async function getProtocolDistribution(options: Options) {
     protocolList.push(await getYamDistribution(options));
     protocolList.push(await getHarvestDistribution(options));
     protocolList.push(await getPickleDistribution(options));
+    protocolList.push(await getBadgerDistribution());
 
     const balances: {[key: string]: BigNumber} = {};
 
@@ -53,9 +55,9 @@ export default async function getProtocolDistribution(options: Options) {
 
     // Subtract the claimed amounts
     Object.keys(balances).forEach(userKey => {
-        const claimedAmount = claimedList.find(user => user.id === userKey)?.totalClaimed ?? new BigNumber(0);
+        const claimedAmount = new BigNumber(claimedList.find(user => user.id === userKey)?.totalClaimed ?? 0);
 
-        balances[userKey] = balances[userKey].minus(claimedAmount);
+        balances[userKey] = balances[userKey].minus(claimedAmount.times(1e18));
     })
 
     // Prepare for finalization
